@@ -15,7 +15,7 @@
     <header class="py-6">
       <div class="container mx-auto">
         <div class="flex justify-between items-center flex-col md:flex-row">
-          <a href="#">TheRecipe</a>
+          <a href="<?php echo site_url('/')?>">TheRecipe</a>
           <ul class="header__nav">
             <?php wp_nav_menu(array(
                 'theme-location' => "header_menu",

@@ -28,15 +28,13 @@
                     } ?>
           <div class="bg-accent text-white px-10 py-14">
             <h3>Ingredients</h3>
-            <ul>
-              <li>1 tsp Asin</li>
-              <li>2 tsp Mantika</li>
-              <li>2 tsp Mantika</li>
-              <li>2 tsp Mantika</li>
-              <li>2 tsp Mantika</li>
-              <li>2 tsp Mantika</li>
-              <li>2 tsp Mantika</li>
-            </ul>
+            <?php
+            $blocks = parse_blocks($post->post_content); 
+            foreach ($blocks as $block) {
+	if ($block['blockName'] == 'core/list') {
+		echo render_block($block);
+	}
+}?>
           </div>
         </div>
       </div>
@@ -49,58 +47,54 @@
 
         <div class="grid grid-cols-[2fr_1fr] gap-10">
           <main>
-            <h5>Step 1</h5>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. A ab in
-              sunt. Sapiente, aliquid! Mollitia fugit dicta expedita doloremque
-              dolorum.
-            </p>
-
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. A ab in
-              sunt. Sapiente, aliquid! Mollitia fugit dicta expedita doloremque
-              dolorum.
-            </p>
-
-            <h5>Step 2</h5>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi
-              porro fugit iure nihil tenetur, optio corrupti dolor debitis
-              beatae. Aliquam ducimus pariatur iure aliquid aperiam esse impedit
-              dolor, quos quas? Eveniet beatae voluptas, nostrum sed accusantium
-              sunt nesciunt veritatis exercitationem, eligendi, quis minima modi
-              cupiditate dicta at. Quisquam, voluptatibus totam?
+              <?php
+            $blocks = parse_blocks($post->post_content); 
+            foreach ($blocks as $block) {
+	if ($block['blockName'] == 'core/paragraph') {
+		echo render_block($block);
+	}
+}?>
             </p>
           </main>
           <aside>
             <h4 class="mb-10">Looking for something else</h4>
+            <?php 
+            $suggest = new WP_Query(array (
+            'post_type' => 'post',
+            'posts_per_page' => 3,
+            'orderby' => 'rand',
+            'post_not_in' => array(get_the_ID())
+            ))?>
 
-            <?php if(have_posts()) : while(have_posts()) : the_post() ?>
+            <?php if($suggest->have_posts()) : while($suggest->have_posts()) : $suggest->the_post() ?>
             <div class="recipe__card flex gap-5 mb-5">
               <?php if(has_post_thumbnail()){
-                        the_post_thumbnail();
-                    } ?>
+                the_post_thumbnail();
+              }?>
               <div>
                 <small><?php echo get_the_category()[0]->name ?></small>
-                <h5><?php the_title()?></h5>
+                <h5><?php the_title() ?></h5>
                 <ul class="flex gap-1">
                   <li><i class="fas fa-star text-accent"></i></li>
                   <li><i class="fas fa-star text-accent"></i></li>
                   <li><i class="fas fa-star text-accent"></i></li>
                   <li><i class="fas fa-star text-accent"></i></li>
                 </ul>
-                <a href="<?php the_permalink()?>">Get recipe</a>
+                <a href="#">Get recipe</a>
               </div>
             </div>
             <?php endwhile;
                         else:
                           echo "No Post";
                         endif;
+                        wp_reset_postdata();
                     ?>
           </aside>
         </div>
       </div>
 </section>
+
 <?php endwhile;
     else:
     echo "no post";
